@@ -6,6 +6,7 @@ import priceStructureRoutes from './routes/priceStructure.routes.js';
 
 dotenv.config();
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -25,6 +26,6 @@ app.use((err, req, res, next) => {//eslint-disable-line
     });
 });
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log('Server is running on: http://localhost:3000');//eslint-disable-line
+app.listen(PORT, () => {
+    console.log(`Server is running on: http://localhost:${PORT}`);//eslint-disable-line
 });
