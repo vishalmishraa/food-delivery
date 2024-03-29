@@ -12,7 +12,8 @@
     "consistent-return": "off",
     "camelcase": "off",
     "import/extensions": ["error", "ignorePackages", {
-      "js": "always"
+      "js": "always",
+      "ts":"always"
     }],
     "import/prefer-default-export": "off",
     "no-const-assign": "off"

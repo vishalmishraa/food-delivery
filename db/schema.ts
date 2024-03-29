@@ -1,12 +1,11 @@
-/** @type { import("drizzle-kit").Config } */
-import { float } from 'drizzle-orm/mysql-core';
 import {
+    doublePrecision,
     integer,
     pgEnum,
     pgTable,
     serial,
     text,
-    varchar,
+    varchar
 } from 'drizzle-orm/pg-core';
 
 export const itemTypeEnum = pgEnum('item_type_enum', ['perishable', 'non-perishable']);
@@ -28,6 +27,6 @@ export const Pricing = pgTable('pricing', {
     item_id: integer('item_id').references(() => Item.id).notNull(),
     zone: varchar('zone').notNull(),
     base_distance_in_km: integer('base_distance_in_km').notNull(),
-    km_price: float('km_price').notNull(),
-    fix_price: float('fix_price').notNull(),
+    km_price: doublePrecision('km_price').notNull(),
+    fix_price: doublePrecision('fix_price').notNull(),
 });

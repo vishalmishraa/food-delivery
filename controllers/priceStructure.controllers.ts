@@ -1,8 +1,9 @@
 import { and, eq } from 'drizzle-orm';
-import { db } from '../db/index.js';
-import { Item, Organnization, Pricing } from '../db/schema.js';
+import { db } from '../db/index';
+import { Item, Organnization, Pricing } from '../db/schema';
+import { Request, Response } from 'express';
 
-export const priceStructure = async (req, res) => {
+export const priceStructure = async (req:Request, res:Response) => {
     try {
         const { organization_id, pricingStructures } = await req.body;
 
@@ -21,7 +22,7 @@ export const priceStructure = async (req, res) => {
             });
         }
 
-        pricingStructures.forEach(async (structure) => {
+        const tasks = pricingStructures.map(async (structure) => {
             const {
                 zone, item_type, item_description, base_distance_in_km, km_price, fix_price,
             } = structure;
@@ -46,7 +47,7 @@ export const priceStructure = async (req, res) => {
             }
 
             // search for item , if not found create it
-            const item = await db
+            let item = await db
                 .select({ id: Item.id })
                 .from(Item)
                 .where(eq(Item.type, item_type));
@@ -70,7 +71,7 @@ export const priceStructure = async (req, res) => {
                     and(
                         eq(Pricing.organization_id, organization_id),
                         eq(Pricing.zone, zone),
-                        eq(Pricing.item_id, item.id),
+                        eq(Pricing.item_id, item[0].id),
                     ),
                 );
 
@@ -79,7 +80,7 @@ export const priceStructure = async (req, res) => {
                     base_distance_in_km,
                     km_price,
                     fix_price,
-                }).where(eq(Pricing.id, pricing.id));
+                }).where(eq(Pricing.id, pricing[0].id));
             } else {
                 await db.insert(Pricing).values({
                     organization_id,
@@ -92,14 +93,16 @@ export const priceStructure = async (req, res) => {
             }
         });
 
+        await Promise.all(tasks);
+
         res.status(200).json({
             success: true,
             message: 'Pricing structure created/updated successfully',
         });
-    } catch (error) {
+    } catch (error:any) {
         return res.status(500).json({
             success: false,
-            message: error.message,
+            message: error,
         });
     }
 };

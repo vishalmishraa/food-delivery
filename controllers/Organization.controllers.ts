@@ -1,15 +1,19 @@
 import { eq } from 'drizzle-orm';
-import { ErrorHandler } from '../utilities/error.js';
-import { db } from '../db/index.js';
-import { Organnization } from '../db/schema.js';
+import { NextFunction, Request, Response } from 'express';
+import { db } from '../db/index';
+import { Organnization } from '../db/schema';
 
-export const newOrganization = async (req, res, next) => {
+export const newOrganization = async (req:Request, res:Response, next:NextFunction) => {
     try {
         const { organization_name } = await req.body;
 
         // Validate payload
         if (!organization_name) {
-            return next(new ErrorHandler(400, 'Please provide all data fields'));
+        
+            return res.json({
+                success: false,
+                message: 'Organization name is required',
+            });
         }
 
         // search for organization if found return error else create it.
@@ -31,13 +35,18 @@ export const newOrganization = async (req, res, next) => {
             success: true,
             message: 'Organization created successfully',
         });
-    } catch (error) {
-        return next(error);
+    } catch (error:any) {
+        return res.status(500).json({
+            success: false,
+            message: error,
+            });
     }
 };
 
 // get all organizations
-export const getAllOrganization = async (req, res, next) => {
+export const getAllOrganization = async (req:Request, res:Response, next:NextFunction) => {
+   console.log('get all organization');
+   
     try {
         const organizations = await db
             .select()

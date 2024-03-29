@@ -1,12 +1,12 @@
 import dotenv from 'dotenv';
-import express from 'express';
-import calculatePriceRoutes from './routes/calculatePrice.routes.js';
-import OrganizationRoutes from './routes/Organization.routes.js';
-import priceStructureRoutes from './routes/priceStructure.routes.js';
+import express, { NextFunction, Request, Response } from 'express';
+import calculatePriceRoutes from './routes/calculatePrice.routes';
+import OrganizationRoutes from './routes/Organization.routes';
+import priceStructureRoutes from './routes/priceStructure.routes';
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -16,7 +16,7 @@ app.use('/api/priceStructure', priceStructureRoutes);
 
 //* ************ midleware *************** */
 
-app.use((err, req, res, next) => {//eslint-disable-line
+app.use((err:any, req:Request, res:Response, next:NextFunction) => {//eslint-disable-line
     const statusCode = err.statusCode || 500;// 500 means internal server error
     const message = err.message || 'Internal Server Error';
     return res.status(statusCode).json({
