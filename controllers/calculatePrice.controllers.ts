@@ -49,7 +49,12 @@ export const calculatePrice = async(req:Request, res:Response, next:NextFunction
                 ),
             );
 
-        const total_price = (total_distance <= pricing[0].base_distance_in_km) ? pricing[0].fix_price : pricing[0].fix_price + (total_distance - pricing[0].base_distance_in_km) * pricing[0].km_price;
+        const total_price = (
+                                (total_distance <= pricing[0].base_distance_in_km) ? 
+                                pricing[0].fix_price :
+                                pricing[0].fix_price + (total_distance - pricing[0].base_distance_in_km) * pricing[0].km_price
+                            
+                                ).toFixed(2);
 
         res.json({
             success: true,
