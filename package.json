@@ -4,8 +4,8 @@
   "description": "Food delivery price calculator based on item type.",
   "main": "index.ts",
   "scripts": {
-    "build": "tsc",
-    "start": "node ./dist/application.js",
+    "build": "npm i && tsc",
+    "start": "node ./dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
