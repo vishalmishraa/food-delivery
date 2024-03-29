@@ -1,169 +1,368 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.3",
   "info": {
-    "version": "v1.0.0",
     "title": "Food Delivery API",
-    "description": "Implementation of a Food Delivery price calculator API"
+    "description": "Implementation of Backend Development for a Food Delivery App",
+    "contact": {
+      "email": "vishalmishra1252@gmail.com"
+    },
+    "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "http://localhost:5000",
-      "description": ""
+      "url": "https://food-delivery-ykfs.onrender.com/api"
+    }
+  ],
+  "tags": [
+    {
+      "name": "costs",
+      "description": "Calculate the Food delivery cost"
+    },
+    {
+      "name": "organizations",
+      "description": "Add new organization or get all organization"
+    },
+    {
+      "name": "item",
+      "description": "Create and get All items"
+    },
+    {
+      "name": "pricing",
+      "description": "Create new pricing and get All pricing"
     }
   ],
   "paths": {
-    "/calculatePrice": {
+    "/calculateCost": {
       "post": {
+        "tags": [
+          "costs"
+        ],
+        "summary": "Calculate cost of food delivery",
         "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
+        "operationId": "CalculateCost",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "zone": {
-                    "example": "any"
-                  },
-                  "organization_id": {
-                    "example": "any"
-                  },
-                  "item_type": {
-                    "example": "any"
-                  },
-                  "item_description": {
-                    "example": "any"
-                  },
-                  "total_distance": {
-                    "example": "any"
-                  }
-                }
+                "$ref": "#/components/schemas/CalculateCost"
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/newOrganization": {
       "post": {
+        "tags": [
+          "organizations"
+        ],
+        "summary": "Add a new item",
         "description": "",
+        "operationId": "newOrganization",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/newOrganization"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Organization Added"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/getAllOrganization": {
       "get": {
-        "description": "",
+        "tags": [
+          "organizations"
+        ],
+        "summary": "Find all the Organizations",
         "responses": {
           "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/addPricing": {
-      "post": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "organization_id": {
-                    "example": "any"
-                  },
-                  "zone": {
-                    "example": "any"
-                  },
-                  "item_id": {
-                    "example": "any"
-                  },
-                  "base_distance_in_km": {
-                    "example": "any"
-                  },
-                  "km_price": {
-                    "example": "any"
-                  },
-                  "fix_price": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/getAllPricing": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
+            "description": "Success"
+          },
+          "500": {
+            "description": "Internal Server error"
           }
         }
       }
     },
     "/addItem": {
       "post": {
+        "tags": [
+          "item"
+        ],
+        "summary": "Add a new item",
         "description": "",
-        "responses": {
-          "201": {
-            "description": "Created"
-          }
-        },
+        "operationId": "AddNewItem",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "example": "any"
-                  },
-                  "description": {
-                    "example": "any"
-                  },
-                  "organization_id": {
-                    "example": "any"
-                  }
-                }
+                "$ref": "#/components/schemas/addItem"
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Item added successfully"
+          },
+          "400": {
+            "description": "Invalid status value"
           }
         }
       }
     },
     "/getAllItems": {
       "get": {
-        "description": "",
+        "tags": [
+          "item"
+        ],
+        "summary": "Find all the Items",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Success"
+          },
+          "500": {
+            "description": "Internal Server error"
+          }
+        }
+      }
+    },
+    "/addPricing": {
+      "post": {
+        "tags": [
+          "pricing"
+        ],
+        "summary": "Add new pricing",
+        "description": "",
+        "operationId": "NewPricing",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addPricing"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/getAllPricing": {
+      "get": {
+        "tags": [
+          "pricing"
+        ],
+        "summary": "Find all the Pricings",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "Internal Server error"
           }
         }
       }
     }
+    
   },
   "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+    "schemas": {
+      "Organization": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "name": {
+            "type": "string",
+            "description": "Organization name",
+            "example": "chocoBakery"
+          }
+        }
+      },
+      "Item": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "item_type": {
+            "type": "string",
+            "description": "pet status in the store",
+            "enum": [
+              "perishable",
+              "non-perishable"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "example": "cake"
+          },
+          "organization_id": {
+            "$ref": "#/components/schemas/Organization"
+          }
+        }
+      },
+      "Pricing": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "organization_id": {
+            "$ref": "#/components/schemas/Organization"
+          },
+          "item_id": {
+            "$ref": "#/components/schemas/Item"
+          },
+          "zone": {
+            "type": "string",
+            "example": "central"
+          },
+          "base_distance_in_km": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "km_price": {
+            "type": "number",
+            "format": "double",
+            "example": 1
+          },
+          "fix_price": {
+            "type": "number",
+            "format": "double",
+            "example": 1
+          }
+        }
+      },
+      "CalculateCost":{
+        "type": "object",
+        "properties": {
+          "zone": {
+            "type": "string",
+            "example": "central"
+          },
+          "organization_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 5
+          },
+          "item_type": {
+            "type": "string",
+            "description": "type of item",
+            "enum": [
+              "perishable",
+              "non-perishable"
+            ]
+          },
+          "item_description": {
+            "type": "string",
+            "example": "cake"
+          },
+          "total_distance": {
+            "type": "integer",
+            "format": "int64",
+            "example": 12
+          }
+        } 
+      },
+      "addItem":{
+        "type": "object",
+        "properties": {
+          "organization_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 5
+          },
+          "description": {
+            "type": "string",
+            "example": "cake"
+          },
+          "type": {
+            "type": "string",
+            "description": "type of item",
+            "enum": [
+              "perishable",
+              "non-perishable"
+            ]
+          }
+        }
+      },
+      "addPricing":{
+        "type": "object",
+        "properties": {
+          "organization_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 5
+          },
+          "item_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 5
+          },
+          "zone": {
+            "type": "string",
+            "example": "central"
+          },
+          "base_distance_in_km": {
+            "type": "integer",
+            "format": "int64",
+            "example": 5
+          },
+          "km_price": {
+            "type": "number",
+            "format": "double",
+            "example": 1.5
+          },
+          "fix_price": {
+            "type": "number",
+            "format": "double",
+            "example": 10
+          }
+        }
+      },
+      "newOrganization":{
+        "type": "object",
+        "properties": {
+          "organization_name": {
+            "type": "string",
+            "example": "chocoBakery"
+          }
+        }
       }
     }
-  }
+  } 
 }
