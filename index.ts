@@ -2,7 +2,11 @@ import dotenv from 'dotenv';
 import express, { NextFunction, Request, Response } from 'express';
 import calculatePriceRoutes from './routes/calculatePrice.routes';
 import OrganizationRoutes from './routes/Organization.routes';
-import priceStructureRoutes from './routes/priceStructure.routes';
+import priceStructureRoutes from './routes/Pricing.routes';
+import ItemRoutes from './routes/Item.routes';
+import swaggerUi from "swagger-ui-express";
+import swaggerOutput from "./swagger_output.json";
+
 
 dotenv.config();
 const app = express();
@@ -10,9 +14,11 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use('/api/calculatePrice', calculatePriceRoutes);
-app.use('/api/organizations', OrganizationRoutes);
-app.use('/api/priceStructure', priceStructureRoutes);
+app.use('/', calculatePriceRoutes);
+app.use('/', OrganizationRoutes);
+app.use('/', priceStructureRoutes);
+app.use('/', ItemRoutes);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerOutput));
 
 //* ************ midleware *************** */
 
