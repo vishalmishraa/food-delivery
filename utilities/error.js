@@ -1,6 +1,6 @@
 // Desc: Error utility functions
 
-export const errorHandler = (statusCode, message) => {
+export const ErrorHandler = (statusCode, message) => {
     const err = new Error();
     err.statusCode = statusCode;
     err.message = message;

@@ -9,6 +9,8 @@
   },
   "rules": {
     "indent": ["error", 4],
+    "consistent-return": "off",
+    "camelcase": "off",
     "import/extensions": ["error", "ignorePackages", {
       "js": "always"
     }],

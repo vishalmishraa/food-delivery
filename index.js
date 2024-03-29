@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import calculatePriceRoutes from './routes/calculatePrice.routes.js';
-import newOrganizationRoutes from './routes/newOrganization.routes.js';
+import OrganizationRoutes from './routes/Organization.routes.js';
 import priceStructureRoutes from './routes/priceStructure.routes.js';
 
 dotenv.config();
@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/api/calculatePrice', calculatePriceRoutes);
-app.use('/api/newOrganization', newOrganizationRoutes);
+app.use('/api/organizations', OrganizationRoutes);
 app.use('/api/priceStructure', priceStructureRoutes);
 
 //* ************ midleware *************** */

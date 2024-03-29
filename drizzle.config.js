@@ -5,7 +5,7 @@ dotenv.config();
 
 export default {
     driver: 'pg',
-    schema: './db/schema.ts',
+    schema: './db/schema.js',
     dbCredentials: {
         connectionString: process.env.DATABASE_URL,
       },//eslint-disable-line
