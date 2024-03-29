@@ -17,6 +17,7 @@ export const Organnization = pgTable('organizations', {
 
 export const Item = pgTable('items', {
     id: serial('id').primaryKey(),
+    organization_id: integer('organization_id').references(() => Organnization.id).notNull(),
     type: itemTypeEnum('type').notNull(),
     description: text('description').notNull(),
 });

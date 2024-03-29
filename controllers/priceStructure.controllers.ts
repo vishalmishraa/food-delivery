@@ -9,7 +9,7 @@ const priceStructureSchema = z.object({
     organization_id: z.number().min(1),
     pricingStructures: z.array(z.object({
         zone: z.string().min(1),
-        item_type: z.string().min(1),
+        item_type: z.enum(['perishable','non-perishable']),
         item_description: z.string().min(1),
         base_distance_in_km: z.number().min(1),
         km_price: z.number().min(1),
@@ -60,19 +60,15 @@ export const priceStructure = async (req:Request, res:Response, next:NextFunctio
                     and(
                         eq(Item.type, item_type),
                         eq(Item.description, item_description),
+                        eq(Item.organization_id,organization_id)
                     ),
                 );
 
             if (item.length < 1) {
-                await db
-                    .insert(Item)
-                    .values({ type: item_type, description: item_description });
-
-                // search for itemId with item type
                 item = await db
-                    .select({ id: Item.id })
-                    .from(Item)
-                    .where(eq(Item.type, item_type));
+                    .insert(Item)
+                    .values({ type: item_type, description: item_description , organization_id})
+                    .returning({ id: Item.id });
             }
 
             const pricing = await db
