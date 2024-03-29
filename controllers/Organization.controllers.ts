@@ -2,10 +2,20 @@ import { eq } from 'drizzle-orm';
 import { NextFunction, Request, Response } from 'express';
 import { db } from '../db/index';
 import { Organnization } from '../db/schema';
+import * as z from 'zod'
+
+const OrganizationSchema = z.object({
+    organization_name: z.string().min(1),
+})
+
 
 export const newOrganization = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const { organization_name } = await req.body;
+        
+        
+        
+        const { organization_name } =  OrganizationSchema.parse(req.body);
+
 
         // Validate payload
         if (!organization_name) {

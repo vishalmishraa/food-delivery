@@ -2,10 +2,28 @@ import { and, eq } from 'drizzle-orm';
 import { db } from '../db/index';
 import { Item, Organnization, Pricing } from '../db/schema';
 import { Request, Response } from 'express';
+import * as z from 'zod'
+
+const priceStructureSchema = z.object({
+    organization_id: z.number().min(1),
+    pricingStructures: z.array(z.object({
+        zone: z.string().min(1),
+        item_type: z.string().min(1),
+        item_description: z.string().min(1),
+        base_distance_in_km: z.number().min(1),
+        km_price: z.number().min(1),
+        fix_price: z.number().min(1),
+    })),
+})
 
 export const priceStructure = async (req:Request, res:Response) => {
     try {
-        const { organization_id, pricingStructures } = await req.body;
+        
+        //validating the request body
+        priceStructureSchema.parse(req.body);
+        
+        
+        const { organization_id, pricingStructures } = req.body;
 
         // Validate payload
         if (!organization_id || !pricingStructures || !Array.isArray(pricingStructures)) {
@@ -55,13 +73,13 @@ export const priceStructure = async (req:Request, res:Response) => {
             if (item.length < 1) {
                 await db
                     .insert(Item)
-                    .values({ type: item_type, description: item_description });
+                    .values({ type : item_type, description: item_description });
 
                 // search for itemId with item type
                 item = await db
                     .select({ id: Item.id })
                     .from(Item)
-                    .where(eq(Item.type, item_type));
+                    .where(eq(Item.type, item_type ));
             }
 
             const pricing = await db
