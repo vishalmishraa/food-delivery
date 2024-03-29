@@ -13,7 +13,7 @@ const calculatePriceSchema = z.object({
     total_distance: z.number().min(1),
 });
 
-export const calculatePrice = async(req:Request, res:Response, next:NextFunction) => {//eslint-disable-line
+export const calculateCost = async(req:Request, res:Response, next:NextFunction) => {//eslint-disable-line
     try {
         calculatePriceSchema.parse(req.body);   
         const { zone, organization_id, item_type, item_description, total_distance } = req.body;
