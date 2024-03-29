@@ -57,6 +57,7 @@ export const priceStructure = async (req:Request, res:Response) => {
                 .select()
                 .from(Organnization)
                 .where(eq(Organnization.id, organization_id));
+
             if (!organization) {
                 return res.status(400).json({
                     success: false,
@@ -68,7 +69,12 @@ export const priceStructure = async (req:Request, res:Response) => {
             let item = await db
                 .select({ id: Item.id })
                 .from(Item)
-                .where(eq(Item.type, item_type));
+                .where(
+                    and(
+                        eq(Item.type, item_type),
+                        eq(Item.description, item_description),
+                    )
+                );
 
             if (item.length < 1) {
                 await db
