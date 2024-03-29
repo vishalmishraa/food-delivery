@@ -3,11 +3,6 @@ import { getAllOrganization, newOrganization } from '../controllers/Organization
 
 const router = express.Router();
 
-function test() {
-    console.log('running---------_>');
-    
-}
-
 router.post('/newOrganization', newOrganization);
 router.get('/getAllOrganization', getAllOrganization);
 
