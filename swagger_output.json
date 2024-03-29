@@ -2,10 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Food Delivery API",
-    "description": "Implementation of Backend Development for a Food Delivery App",
-    "contact": {
-      "email": "vishalmishra1252@gmail.com"
-    },
+    "description": "Implementation of Backend Development for a Food Delivery App \n- [Github repository of this project  ](https://github.com/vishalmishraa/food-delivery)\n\n- [Contact Developer](https://www.linkedin.com/in/vishal022/)",
     "version": "1.0.0"
   },
   "servers": [
