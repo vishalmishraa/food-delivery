@@ -1,10 +1,9 @@
 import { and, eq } from 'drizzle-orm';
+import * as z from 'zod';
+import { NextFunction, Request, Response } from 'express';
 import { db } from '../db/index';
 import { ErrorHandler } from '../utilities/error';
 import { Item, Organnization, Pricing } from '../db/schema';
-import { NextFunction, Request, Response } from 'express';
-import * as z from 'zod'
-
 
 const priceStructureSchema = z.object({
     organization_id: z.number().min(1),
@@ -16,14 +15,13 @@ const priceStructureSchema = z.object({
         km_price: z.number().min(1),
         fix_price: z.number().min(1),
     })),
-})
+});
 
-export const priceStructure = async (req:Request, res:Response,next:NextFunction) => {
+export const priceStructure = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        
-        //validating the request body
+        // validating the request body
         priceStructureSchema.parse(req.body);
-        
+
         const { organization_id, pricingStructures } = req.body;
 
         // Validate payload
@@ -62,19 +60,19 @@ export const priceStructure = async (req:Request, res:Response,next:NextFunction
                     and(
                         eq(Item.type, item_type),
                         eq(Item.description, item_description),
-                    )
+                    ),
                 );
 
             if (item.length < 1) {
                 await db
                     .insert(Item)
-                    .values({ type : item_type, description: item_description });
+                    .values({ type: item_type, description: item_description });
 
                 // search for itemId with item type
                 item = await db
                     .select({ id: Item.id })
                     .from(Item)
-                    .where(eq(Item.type, item_type ));
+                    .where(eq(Item.type, item_type));
             }
 
             const pricing = await db
@@ -107,7 +105,7 @@ export const priceStructure = async (req:Request, res:Response,next:NextFunction
         });
 
         await Promise.all(tasks).catch((error) => {
-            throw new ErrorHandler(500, error.message);   
+            throw new ErrorHandler(500, error.message);
         });
 
         res.status(200).json({
@@ -115,6 +113,6 @@ export const priceStructure = async (req:Request, res:Response,next:NextFunction
             message: 'Pricing structure created/updated successfully',
         });
     } catch (error:any) {
-        return next(error)
+        return next(error);
     }
 };
