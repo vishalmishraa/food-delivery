@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { NextFunction, Request, Response } from 'express';
 import { db } from '../db/index';
+import { ErrorHandler } from "../utilities/error";
 import { Organnization } from '../db/schema';
 import * as z from 'zod'
 
@@ -12,18 +13,11 @@ const OrganizationSchema = z.object({
 export const newOrganization = async (req:Request, res:Response, next:NextFunction) => {
     try {
         
-        
-        
         const { organization_name } =  OrganizationSchema.parse(req.body);
-
 
         // Validate payload
         if (!organization_name) {
-        
-            return res.json({
-                success: false,
-                message: 'Organization name is required',
-            });
+            throw new ErrorHandler(400, 'Please provide all data fields');
         }
 
         // search for organization if found return error else create it.
@@ -33,10 +27,7 @@ export const newOrganization = async (req:Request, res:Response, next:NextFuncti
             .where(eq(Organnization.name, organization_name));
 
         if (organization.length > 0) {
-            return res.status(400).json({
-                success: false,
-                message: 'Organization already exist',
-            });
+            throw new ErrorHandler(400, 'Organization already exists');
         }
 
         await db.insert(Organnization).values({ name: organization_name });
@@ -46,17 +37,12 @@ export const newOrganization = async (req:Request, res:Response, next:NextFuncti
             message: 'Organization created successfully',
         });
     } catch (error:any) {
-        return res.status(500).json({
-            success: false,
-            message: error,
-            });
+        return next(error)
     }
 };
 
 // get all organizations
 export const getAllOrganization = async (req:Request, res:Response, next:NextFunction) => {
-   console.log('get all organization');
-   
     try {
         const organizations = await db
             .select()

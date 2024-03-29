@@ -16,8 +16,8 @@ app.use('/api/priceStructure', priceStructureRoutes);
 
 //* ************ midleware *************** */
 
-app.use((err:any, req:Request, res:Response, next:NextFunction) => {//eslint-disable-line
-    const statusCode = err.statusCode || 500;// 500 means internal server error
+app.use((err: any, req: Request, res: Response, next: NextFunction) => { //eslint-disable-line
+    const statusCode = err.statusCode || 500; // 500 means internal server error
     const message = err.message || 'Internal Server Error';
     return res.status(statusCode).json({
         success: false,

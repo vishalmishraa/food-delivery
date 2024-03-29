@@ -1,8 +1,10 @@
 import { and, eq } from 'drizzle-orm';
 import { db } from '../db/index';
+import { ErrorHandler } from '../utilities/error';
 import { Item, Organnization, Pricing } from '../db/schema';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import * as z from 'zod'
+
 
 const priceStructureSchema = z.object({
     organization_id: z.number().min(1),
@@ -16,28 +18,21 @@ const priceStructureSchema = z.object({
     })),
 })
 
-export const priceStructure = async (req:Request, res:Response) => {
+export const priceStructure = async (req:Request, res:Response,next:NextFunction) => {
     try {
         
         //validating the request body
         priceStructureSchema.parse(req.body);
         
-        
         const { organization_id, pricingStructures } = req.body;
 
         // Validate payload
         if (!organization_id || !pricingStructures || !Array.isArray(pricingStructures)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Please provide all data fields',
-            });
+            throw new ErrorHandler(400, 'Please provide all data fields');
         }
 
         if (pricingStructures.length < 1) {
-            return res.status(400).json({
-                success: false,
-                message: 'Please provide at least one pricing structure',
-            });
+            throw new ErrorHandler(400, 'Please provide at least one pricing structure');
         }
 
         const tasks = pricingStructures.map(async (structure) => {
@@ -46,10 +41,7 @@ export const priceStructure = async (req:Request, res:Response) => {
             } = structure;
 
             if (!zone || !item_type || !base_distance_in_km || !km_price || !fix_price) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Please provide all data fields',
-                });
+                throw new ErrorHandler(400, 'Please provide all data fields');
             }
 
             // search for organization
@@ -58,11 +50,8 @@ export const priceStructure = async (req:Request, res:Response) => {
                 .from(Organnization)
                 .where(eq(Organnization.id, organization_id));
 
-            if (!organization) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Organization not found',
-                });
+            if (organization.length < 1) {
+                throw new ErrorHandler(400, 'Organization not found');
             }
 
             // search for item , if not found create it
@@ -117,16 +106,15 @@ export const priceStructure = async (req:Request, res:Response) => {
             }
         });
 
-        await Promise.all(tasks);
+        await Promise.all(tasks).catch((error) => {
+            throw new ErrorHandler(500, error.message);   
+        });
 
         res.status(200).json({
             success: true,
             message: 'Pricing structure created/updated successfully',
         });
     } catch (error:any) {
-        return res.status(500).json({
-            success: false,
-            message: error,
-        });
+        return next(error)
     }
 };
