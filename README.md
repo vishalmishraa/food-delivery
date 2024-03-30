@@ -103,7 +103,7 @@ Calculates delivery costs based on:
  #### Get All Organization
 
 ```http
-  POST /api/getAllOrganization
+  GET /api/getAllOrganization
 ```
 - #### Response body
 
@@ -148,7 +148,7 @@ Calculates delivery costs based on:
  #### Get All Item
 
 ```http
-  POST /api/getAllItem
+  GET /api/getAllItem
 ```
 - #### Response body
 
@@ -203,7 +203,7 @@ Calculates delivery costs based on:
  #### Get All Princg
 
 ```http
-  POST /api/getAllPricing
+  GET /api/getAllPricing
 ```
 - #### Response body
 
