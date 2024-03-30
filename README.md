@@ -36,7 +36,8 @@ Calculates delivery costs based on:
 
 ```bash
   git clone https://github.com/vishalmishraa/food-delivery.git
-
+```
+```bash
   cd food-delivery
 ```
     
