@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Food Delivery API",
-    "description": "Implementation of Backend Development for a Food Delivery App \n- [Setup Guide  ](https://github.com/vishalmishraa/food-delivery/blob/master/README.md)\n\n- [Github Repository  ](https://github.com/vishalmishraa/food-delivery)\n\n- [Contact Developer](https://www.linkedin.com/in/vishal022/)",
+    "description": "Implementation of Backend Development for a Food Delivery App \n- [Setup Guide and more details.  ](https://github.com/vishalmishraa/food-delivery/blob/master/README.md)\n\n- [Github Repository  ](https://github.com/vishalmishraa/food-delivery)\n\n- [Contact Developer](https://www.linkedin.com/in/vishal022/)",
     "version": "1.0.0"
   },
   "servers": [
