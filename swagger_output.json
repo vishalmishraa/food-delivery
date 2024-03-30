@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://food-delivery-ykfs.onrender.com/api",
+      "url": "https://lobster-app-rabce.ondigitalocean.app/api",
       "description": "Production server"
     },
     {
