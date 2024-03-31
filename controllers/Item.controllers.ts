@@ -55,9 +55,12 @@ export const addItem = async (req: Request, res: Response, next:NextFunction) =>
         });
 
     } catch (error) {
+        if(error instanceof z.ZodError){
+            next(new ErrorHandler(400, error.errors[0].message));
+        }
         return next(error)
     }
-    next();
+    
 }
 
 export const getAllItems = async (req: Request, res: Response, next:NextFunction) => {
@@ -75,6 +78,9 @@ export const getAllItems = async (req: Request, res: Response, next:NextFunction
             data: item
         });
     } catch (error) {
+        if(error instanceof z.ZodError){
+            next(new ErrorHandler(400, error.errors[0].message));
+        }
         next(error)
     }
 }

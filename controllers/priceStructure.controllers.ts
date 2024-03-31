@@ -75,6 +75,9 @@ export const priceStructure = async (req:Request, res:Response, next:NextFunctio
         });
 
     } catch (error:any) {
+        if(error instanceof z.ZodError){
+            next(new ErrorHandler(400, error.errors[0].message));
+        }
         return next(error);
     }
 };
@@ -91,6 +94,9 @@ export const getAllPricing = async (req:Request, res:Response, next:NextFunction
             data: pricing,
         });
     } catch (error:any) {
+        if(error instanceof z.ZodError){
+            next(new ErrorHandler(400, error.errors[0].message));
+        }
         return next(error);
     }
 }

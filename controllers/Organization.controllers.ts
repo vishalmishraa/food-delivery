@@ -36,7 +36,10 @@ export const newOrganization = async (req:Request, res:Response, next:NextFuncti
             success: true,
             message: 'Organization created successfully',
         });
-    } catch (error:any) {
+    } catch (error) {
+        if(error instanceof z.ZodError){
+            next(new ErrorHandler(400, error.errors[0].message));
+        }
         return next(error)
     }
 };
@@ -48,11 +51,18 @@ export const getAllOrganization = async (req:Request, res:Response, next:NextFun
             .select()
             .from(Organnization);
 
+        if (organizations.length < 1) {
+            throw new ErrorHandler(404, 'No organization found');
+        }
+
         return res.status(200).json({
             success: true,
             organizations,
         });
     } catch (error) {
+        if(error instanceof z.ZodError){
+            next(new ErrorHandler(400, error.errors[0].message));
+        }
         return next(error);
     }
 };
