@@ -4,23 +4,21 @@ import { NextFunction, Request, Response } from 'express';
 import { db } from '../db/index';
 import { ErrorHandler } from '../utilities/error';
 import { Item, Organnization, Pricing } from '../db/schema';
+import { priceStructureSchema } from '../lib/validators/inputValidation';
 
-const priceStructureSchema = z.object({
-    organization_id: z.number().min(1),
-    zone: z.string().min(1),
-    item_id: z.number().min(1),   
-    base_distance_in_km: z.number().min(1),
-    km_price: z.number().min(1),
-    fix_price: z.number().min(1),
-   
-});
+
 
 export const priceStructure = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        // validating the request body
-        priceStructureSchema.parse(req.body);
-
-        const { organization_id, zone , item_id , base_distance_in_km , km_price , fix_price} = req.body;
+        
+        const { 
+                organization_id,
+                zone,
+                item_id, 
+                base_distance_in_km, 
+                km_price, 
+                fix_price
+            } = priceStructureSchema.parse(req.body);
 
         const organization = await db
                     .select()
@@ -76,7 +74,8 @@ export const priceStructure = async (req:Request, res:Response, next:NextFunctio
 
     } catch (error:any) {
         if(error instanceof z.ZodError){
-            next(new ErrorHandler(400, error.errors[0].message));
+            const message = error.errors[0].message + ' in ' + error.errors[0].path;
+            next(new ErrorHandler(400, message));
         }
         return next(error);
     }
@@ -94,9 +93,6 @@ export const getAllPricing = async (req:Request, res:Response, next:NextFunction
             data: pricing,
         });
     } catch (error:any) {
-        if(error instanceof z.ZodError){
-            next(new ErrorHandler(400, error.errors[0].message));
-        }
         return next(error);
     }
 }

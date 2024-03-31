@@ -4,20 +4,15 @@ import * as z from "zod";
 import { and, eq } from "drizzle-orm";
 import { Item, Organnization } from "../db/schema";
 import { db } from "../db";
+import { createItemSchema } from "../lib/validators/inputValidation";
 
-
-const itemSchema = z.object({
-    type: z.enum(["perishable", "non-perishable"]),
-    description: z.string().min(1),
-    organization_id: z.number().min(1),
-});
 
 
 export const addItem = async (req: Request, res: Response, next:NextFunction) => {
     try {
-        itemSchema.parse(req.body);
+        
 
-        const { type, description, organization_id } = req.body;
+        const { type, description, organization_id } = createItemSchema.parse(req.body);
 
         const organization = await db
             .select()
@@ -56,7 +51,8 @@ export const addItem = async (req: Request, res: Response, next:NextFunction) =>
 
     } catch (error) {
         if(error instanceof z.ZodError){
-            next(new ErrorHandler(400, error.errors[0].message));
+            const message = error.errors[0].message + ' in ' + error.errors[0].path;
+            next(new ErrorHandler(400, message));
         }
         return next(error)
     }
@@ -78,9 +74,6 @@ export const getAllItems = async (req: Request, res: Response, next:NextFunction
             data: item
         });
     } catch (error) {
-        if(error instanceof z.ZodError){
-            next(new ErrorHandler(400, error.errors[0].message));
-        }
         next(error)
     }
 }

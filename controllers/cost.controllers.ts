@@ -4,19 +4,19 @@ import * as z from 'zod'
 import { db } from '../db/index';
 import { ErrorHandler } from "../utilities/error";
 import { Pricing , Item } from '../db/schema';
+import { calculatePriceSchema } from '../lib/validators/inputValidation';
 
-const calculatePriceSchema = z.object({
-    zone: z.string().min(1),
-    organization_id: z.number().min(1),
-    item_type: z.enum(['perishable','non-perishable']),
-    item_description: z.string().min(1),
-    total_distance: z.number().min(1),
-});
 
 export const calculateCost = async(req:Request, res:Response, next:NextFunction) => {//eslint-disable-line
     try {
-        calculatePriceSchema.parse(req.body);   
-        const { zone, organization_id, item_type, item_description, total_distance } = req.body;
+         
+        const { 
+                    zone,
+                    organization_id,
+                    item_type,
+                    item_description,
+                    total_distance
+                } =  calculatePriceSchema.parse(req.body); 
 
         //first find item_id to find pricing structure
          const item_id = await db
@@ -29,6 +29,7 @@ export const calculateCost = async(req:Request, res:Response, next:NextFunction)
                         eq(Item.organization_id,organization_id)
                     ),
                 );
+
         if (item_id.length < 1 ) {
             throw new ErrorHandler(400, 'Item not found');
         }
@@ -49,6 +50,10 @@ export const calculateCost = async(req:Request, res:Response, next:NextFunction)
                 ),
             );
 
+        if (pricing.length < 1) {
+            throw new ErrorHandler(400, 'Cost not found for this item in the given zone or organization');
+        }
+
         const total_price = (
                                 (total_distance <= pricing[0].base_distance_in_km) ? 
                                 pricing[0].fix_price :
@@ -64,7 +69,8 @@ export const calculateCost = async(req:Request, res:Response, next:NextFunction)
     } catch (error) {
 
         if(error instanceof z.ZodError){
-            next(new ErrorHandler(400, error.errors[0].message));
+            const message = error.errors[0].message + ' in ' + error.errors[0].path;
+            next(new ErrorHandler(400, message));
         }
         
         return next(error);

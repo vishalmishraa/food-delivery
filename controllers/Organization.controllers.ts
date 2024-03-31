@@ -4,10 +4,8 @@ import { db } from '../db/index';
 import { ErrorHandler } from "../utilities/error";
 import { Organnization } from '../db/schema';
 import * as z from 'zod'
+import { OrganizationSchema } from '../lib/validators/inputValidation';
 
-const OrganizationSchema = z.object({
-    organization_name: z.string().min(1),
-})
 
 
 export const newOrganization = async (req:Request, res:Response, next:NextFunction) => {
@@ -38,7 +36,8 @@ export const newOrganization = async (req:Request, res:Response, next:NextFuncti
         });
     } catch (error) {
         if(error instanceof z.ZodError){
-            next(new ErrorHandler(400, error.errors[0].message));
+            const message = error.errors[0].message + ' in ' + error.errors[0].path;
+            next(new ErrorHandler(400, message));
         }
         return next(error)
     }
@@ -60,9 +59,6 @@ export const getAllOrganization = async (req:Request, res:Response, next:NextFun
             organizations,
         });
     } catch (error) {
-        if(error instanceof z.ZodError){
-            next(new ErrorHandler(400, error.errors[0].message));
-        }
         return next(error);
     }
 };
